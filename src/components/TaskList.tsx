@@ -16,14 +16,29 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+    if (!newTaskTitle) return; //caso esteja vazio
+    const newTask ={
+      id: Math.random(), //gerar um id aleatorio
+      title: newTaskTitle,
+      isComplete: false,
+    }
+    setTasks(oldState => [...oldState, newTask ]); //uso o Spread operator... em um oldState para salvar os dados que já tem no array e adc no final dele uma new task logo
+    setNewTaskTitle('');//apos adc uma task reseta o input para vazio
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    const newTask  = tasks.map(task =>task.id == id ?{
+      ...task,
+      isComplete: !task.isComplete
+    } : task);
+    setTasks(newTask)
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
+    const filterTask = tasks.filter(task => task.id !== id )
+    setTasks(filterTask)
   }
 
   return (
@@ -36,7 +51,7 @@ export function TaskList() {
             type="text" 
             placeholder="Adicionar novo todo" 
             onChange={(e) => setNewTaskTitle(e.target.value)}
-            value={newTaskTitle}
+            value={newTaskTitle}//valor dele sempre fica salva nesse value
           />
           <button type="submit" data-testid="add-task-button" onClick={handleCreateNewTask}>
             <FiCheckSquare size={16} color="#fff"/>
